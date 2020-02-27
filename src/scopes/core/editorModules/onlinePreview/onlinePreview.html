@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>onlinePreview</title>
-  <script src="static/spaPreview/jquery.js"></script>
+    <meta charset="UTF-8">
+    <title>onlinePreview</title>
+    <!--<script src="static/spaPreview/jquery.js"></script>-->
 </head>
 <style>
-  #myonlinePreview{
-    height: 100%;
-    width: 100%;
-  }
-  #myonlinePreview iframe{
-    height: 100%;
-    width: 100%;
-
-  }
-  body,html{
-    height: 100%;
-    margin: 0px;
-    padding: 0px;
-    overflow: hidden;
-  }
+    #myonlinePreview {
+        height: 100%;
+        width: 100%;
+    }
+    
+    #myonlinePreview iframe {
+        height: 100%;
+        width: 100%;
+    }
+    
+    body,
+    html {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+    }
 </style>
+
 <body>
-<div id="myonlinePreview">
-  <iframe srcdoc="template" id="iframe-page" frameborder="0"></iframe>
-</div>
-<script>
-  window.onload=function () {
-    var page=document.getElementById("iframe-page");
-    var vueObj = getVueObj(getData().onlineHtml);
-    var template = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Title</title></head>
+    <div id="myonlinePreview">
+        <iframe srcdoc="template" id="iframe-page" frameborder="0"></iframe>
+    </div>
+    <!--    <script>
+        window.onload = function() {
+            var page = document.getElementById("iframe-page");
+            var vueObj = getVueObj(getData().onlineHtml);
+            var template = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Title</title></head>
 <script>less = { env: 'development'};<\/script>
 <script src="static/spaPreview/vue.min.js"><\/script>
 <script src="static/spaPreview/array-tree-filter.js"><\/script>
@@ -40,145 +44,151 @@
 <script src="static/spaPreview/vue-router.min.js"><\/script>
 <script src="static/spaPreview/vuex.min.js"><\/script>
 <script src="static/spaPreview/ta404-ui.js"><\/script>
-<body><div id="myapp">`+vueObj.template+`</div>
+<body><div id="myapp">` + vueObj.template + `</div>
 <script>
-`+vueObj.jsStr+`
-var vm = new Vue(`+vueObj.jsObj+`).$mount('#myapp')
+` + vueObj.jsStr + `
+var vm = new Vue(` + vueObj.jsObj + `).$mount('#myapp')
 <\/script>
 <\/body>
 <link rel="stylesheet" href="static/spaPreview/ta404-ui.css">
-<style type="text/less" lang="less">body,html{height: 100%;margin: 0px;padding: 0px}`+vueObj.style+`</style>
+<style type="text/less" lang="less">body,html{height: 100%;margin: 0px;padding: 0px}` + vueObj.style + `</style>
 <script src="static/spaPreview/less.min.js"><\/script>
 </html>`;
-    page.setAttribute("srcdoc",template);
-  }
-  function getData() {
-    var  onlineHtml='<template><div>没有数据</div></template>',onlineDa={}
-    var urlParam = getNowPageParam();
-    //如果有formId传过来就请求模板的code 数据
-    //如果有pageId传过来那么请求页面的code数据
-    if (Object.keys(urlParam).length > 0) {
-        var dataId=urlParam['formId'] ||urlParam['pageId'];
-
-        var dataURL=faceConfig.basePath+"/templateMg/templateMgRestService/getOnlineFormVoByFormId";
-        if(urlParam['pageId']){
-          dataURL=faceConfig.basePath+'/appMg/appPageRestService/queryOnlineDevInfo'
-        }
-        var data={
-          _modulePartId_:urlParam._modulePartId_,
-          frontUrl:window.location.href
-        }
-        if(urlParam['formId']){
-          data.formId=urlParam['formId']
-        }else if(urlParam['pageId']){
-          data.pageId=urlParam['pageId']
+            page.setAttribute("srcdoc", template);
         }
 
-        if(dataId){
-          $.ajax({
-            type: "POST",
-            headers: {
-              'X-XSRF-TOKEN': getToken('XSRF-TOKEN')
-            },
-            url:dataURL,
-            data: data,
-            xhrFields:{
-              withCredentials:true
-            },
-            async:false,
-            success: function(data){
-              try {
-                onlineHtml = data.data.formVo.formHtml || '';
-                onlineDa= JSON.parse( data.data.formVo.formData)
-              }catch (e) {
-                onlineHtml=`<template><ta-alert type="error" message="数据获取错误" banner /></template>`;
-                onlineDa={}
-              }
+        function getData() {
+            var onlineHtml = '<template><div>没有数据</div></template>',
+                onlineDa = {}
+            var urlParam = getNowPageParam();
+            //如果有formId传过来就请求模板的code 数据
+            //如果有pageId传过来那么请求页面的code数据
+            if (Object.keys(urlParam).length > 0) {
+                var dataId = urlParam['formId'] || urlParam['pageId'];
+
+                var dataURL = faceConfig.basePath + "/templateMg/templateMgRestService/getOnlineFormVoByFormId";
+                if (urlParam['pageId']) {
+                    dataURL = faceConfig.basePath + '/appMg/appPageRestService/queryOnlineDevInfo'
+                }
+                var data = {
+                    _modulePartId_: urlParam._modulePartId_,
+                    frontUrl: window.location.href
+                }
+                if (urlParam['formId']) {
+                    data.formId = urlParam['formId']
+                } else if (urlParam['pageId']) {
+                    data.pageId = urlParam['pageId']
+                }
+
+                if (dataId) {
+                    $.ajax({
+                        type: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': getToken('XSRF-TOKEN')
+                        },
+                        url: dataURL,
+                        data: data,
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        async: false,
+                        success: function(data) {
+                            try {
+                                onlineHtml = data.data.formVo.formHtml || '';
+                                onlineDa = JSON.parse(data.data.formVo.formData)
+                            } catch (e) {
+                                onlineHtml = `<template><ta-alert type="error" message="数据获取错误" banner /></template>`;
+                                onlineDa = {}
+                            }
+                        }
+
+                    });
+                }
+
+            } else {
+                //如果没有formId那么从本地取
+                onlineDa = JSON.parse(localStorage.getItem('onlineDa'));
+                onlineHtml = localStorage.getItem('onlineHtml');
+            }
+            return {
+                onlineDa: onlineDa,
+                onlineHtml: onlineHtml
+            }
+        }
+
+        function getVueObj(onlineHtml) {
+            var str = onlineHtml;
+            str = str.replace("</template>", "woshizhu");
+            str = str.replace("<\/script>", "woshizhu");
+            str = str.replace("</style>", "woshizhu");
+            var list = str.split("woshizhu")
+            var vueObj = {};
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].indexOf('<template>') >= 0) {
+                    vueObj.template = list[i].replace(`<template>`, '');
+                    continue;
+                }
+                if (list[i].indexOf('<script>') >= 0) {
+                    vueObj.js = list[i].replace(`<script>`, '');
+                    continue;
+                }
+                if (list[i].indexOf('<style') >= 0) {
+                    vueObj.style = list[i].replace(/<style(.*)>/, '');
+                    continue;
+                }
+            }
+            var jsStr, jsObj;
+            vueObj.js = vueObj.js ? vueObj.js.replace(/export(.*)default/, 'woshizhu') : "";
+            vueObj.style = vueObj.style ? vueObj.style : ''
+            vueObj.template = vueObj.template ? vueObj.template : '<ta-alert type="error" message="模板格式不正确" banner />'
+                //没有export
+            if (vueObj.js.indexOf('woshizhu') < 0) {
+                jsStr = vueObj.js;
+                jsObj = "{}"
+            } else {
+                var jslist = vueObj.js.split("woshizhu");
+                if (jslist.length == 1) {
+                    jsStr = '';
+                    jsObj = jslist[0]
+                } else if (jslist.length == 2) {
+                    jsStr = jslist[0];
+                    jsObj = jslist[1]
+                }
             }
 
-          });
+            jsObj = jsObj.replace(/[\r\n]/g, "");
+            vueObj.js.replace("woshizhu", '')
+            vueObj.jsStr = jsStr;
+            vueObj.jsObj = JSON.parse(JSON.stringify(jsObj))
+            return vueObj
         }
 
-    }else {
-      //如果没有formId那么从本地取
-      onlineDa = JSON.parse(localStorage.getItem('onlineDa'));
-      onlineHtml = localStorage.getItem('onlineHtml');
-    }
-    return {
-      onlineDa:onlineDa,
-      onlineHtml:onlineHtml
-    }
-  }
-  function getVueObj(onlineHtml) {
-    var str = onlineHtml;
-    str = str.replace("</template>", "woshizhu");
-    str = str.replace("<\/script>", "woshizhu");
-    str = str.replace("</style>", "woshizhu");
-    var list = str.split("woshizhu")
-    var vueObj = {};
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].indexOf('<template>') >= 0) {
-        vueObj.template = list[i].replace(`<template>`, '');
-        continue;
-      }
-      if (list[i].indexOf('<script>') >= 0) {
-        vueObj.js = list[i].replace(`<script>`, '');
-        continue;
-      }
-      if (list[i].indexOf('<style') >= 0) {
-        vueObj.style = list[i].replace(/<style(.*)>/, '');
-        continue;
-      }
-    }
-    var jsStr, jsObj;
-    vueObj.js = vueObj.js?vueObj.js.replace(/export(.*)default/, 'woshizhu'):"";
-    vueObj.style=vueObj.style?vueObj.style:''
-    vueObj.template=vueObj.template?vueObj.template:'<ta-alert type="error" message="模板格式不正确" banner />'
-    //没有export
-    if (vueObj.js.indexOf('woshizhu') < 0) {
-      jsStr = vueObj.js;
-      jsObj = "{}"
-    } else {
-      var jslist = vueObj.js.split("woshizhu");
-      if (jslist.length == 1) {
-        jsStr = '';
-        jsObj = jslist[0]
-      } else if (jslist.length == 2) {
-        jsStr = jslist[0];
-        jsObj = jslist[1]
-      }
-    }
+        function getNowPageParam() {
+            let url = document.location.href.split("?")[1]
+            let param = {}
+            if (url) {
+                url = url.replace(/#\//g, '');
+                let strs = url.split('&')
+                for (let i = 0; i < strs.length; i++) {
+                    param[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1])
+                }
+            }
+            return param
+        };
 
-    jsObj = jsObj.replace(/[\r\n]/g,"");
-    vueObj.js.replace("woshizhu",'')
-    vueObj.jsStr = jsStr;
-    vueObj.jsObj = JSON.parse(JSON.stringify(jsObj))
-    return vueObj
-  }
-  function getNowPageParam () {
-    let url = document.location.href.split("?")[1]
-    let param = {}
-    if (url) {
-      url=url.replace(/#\//g,'');
-      let strs = url.split('&')
-      for (let i = 0; i < strs.length; i++) {
-        param[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1])
-      }
-    }
-    return param
-  };
-  function getToken(){
-    let strCookie = document.cookie;//获取cookie字符串
-    let arrCookie = strCookie.split("; ");//分割
-    //遍历匹配
-    let token = "";
-    arrCookie.map((value) => {
-      if(value.indexOf("XSRF-TOKEN")!==-1){
-        token = value.slice("XSRF-TOKEN".length + 1);
-      }
-    });
-    return token;
-  }
-</script>
+        function getToken() {
+            let strCookie = document.cookie; //获取cookie字符串
+            let arrCookie = strCookie.split("; "); //分割
+            //遍历匹配
+            let token = "";
+            arrCookie.map((value) => {
+                if (value.indexOf("XSRF-TOKEN") !== -1) {
+                    token = value.slice("XSRF-TOKEN".length + 1);
+                }
+            });
+            return token;
+        }
+    </script>-->
 </body>
+
 </html>

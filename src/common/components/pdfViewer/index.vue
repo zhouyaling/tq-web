@@ -6,10 +6,10 @@
 </template>
 
 <script>
-import pdfSupport from './pdfSupport'
+/*import pdfSupport from './pdfSupport'*/
 export default {
   name: 'pdfViewer',
-  mixins: [pdfSupport],
+  /*mixins: [pdfSupport],*/
   props: {
     restUrl: {
       type: String,

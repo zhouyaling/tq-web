@@ -44,7 +44,7 @@
 <script>
 import addTemplate from './part/addTemplate'
 import $api from './api/index'
-import PdfViewer from '@common/components/pdfViewer'
+/*import PdfViewer from '@common/components/pdfViewer'*/
 
 const columns = [
   { title: '报表标志', dataIndex: 'raqfilename', width: '15%' },
@@ -56,7 +56,7 @@ const columns = [
   { title: '操作', dataIndex: 'operate', align: 'center', width: '340px', overflowTooltip: false, scopedSlots: { customRender: 'operate' } }
 ]
 export default {
-  components: { addTemplate, PdfViewer },
+  components: { addTemplate, /*PdfViewer*/ },
   name: 'templateMg',
   data () {
     return {
